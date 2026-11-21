@@ -1,0 +1,42 @@
+[
+  {
+    "id": "f-canteen-1-1",
+    "buildingId": "b-canteen-1",
+    "name": "一层",
+    "order": 1,
+    "width": 900,
+    "height": 600
+  },
+  {
+    "id": "f-canteen-1-2",
+    "buildingId": "b-canteen-1",
+    "name": "二层",
+    "order": 2,
+    "width": 900,
+    "height": 600
+  },
+  {
+    "id": "f-canteen-2-1",
+    "buildingId": "b-canteen-2",
+    "name": "一层",
+    "order": 3,
+    "width": 900,
+    "height": 600
+  },
+  {
+    "id": "f-food-court-1",
+    "buildingId": "b-food-court",
+    "name": "一层",
+    "order": 4,
+    "width": 900,
+    "height": 600
+  },
+  {
+    "id": "f-food-court-2",
+    "buildingId": "b-food-court",
+    "name": "二层",
+    "order": 5,
+    "width": 900,
+    "height": 600
+  }
+]

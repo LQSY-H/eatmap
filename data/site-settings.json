@@ -1,0 +1,10 @@
+{
+  "merchantFeedPromoEnabled": true,
+  "feedAnnouncementStripEnabled": true,
+  "galleryModerationMode": "pre",
+  "reviewModerationMode": "pre",
+  "feedAnnouncementStrip": {
+    "stripTitle": "公告",
+    "items": []
+  }
+}

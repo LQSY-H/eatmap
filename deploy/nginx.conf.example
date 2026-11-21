@@ -1,0 +1,83 @@
+# =============================================================================
+# Nginx 反代示例（Node 监听 4000）
+#
+# 默认方案：部署在域名根路径（EATMAP_BASE_PATH 留空）。
+# 子路径方案（如 https://example.com/eatmap）见文件末尾。
+#
+# 注意：
+# 1. 上传图片经 /api/upload 接收，单张上限 12MB，因此 client_max_body_size 建议 ≥ 20m。
+# 2. 不要给 /_next/ 单独配置返回 404 的 location，否则会出现「页面有字无样式」。
+# 3. 若前面有 CDN，务必转发 X-Forwarded-Proto / X-Forwarded-Host。
+# =============================================================================
+
+server {
+    listen 80;
+    server_name example.com;
+
+    # 若由本机 Nginx 终止 TLS，证书配置参考 certbot；否则由外层负载均衡处理。
+    # listen 443 ssl http2;
+    # ssl_certificate     /etc/letsencrypt/live/example.com/fullchain.pem;
+    # ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;
+
+    client_max_body_size 20m;
+
+    location / {
+        proxy_pass http://127.0.0.1:4000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 120s;
+    }
+}
+
+# =============================================================================
+# 子路径部署：应用挂在 /eatmap，Node 仍监听 4000。
+#
+# 同时需要：
+#   .env.production:  NEXT_PUBLIC_SITE_URL=https://example.com/eatmap
+#   .env.production:  EATMAP_BASE_PATH=/eatmap
+#   npm run build     （构建时即写入 basePath，构建与运行必须使用同一套环境变量）
+#
+# 关键点：
+#   - proxy_pass 末尾不要加 `/`，否则 /eatmap/xxx 会被改写成 /xxx，Next 匹配失败。
+#   - location 用 `^~`，避免被后缀正则 location 抢走。
+#   - 对 `/eatmap` 与 `/eatmap/` 一律直接反代，不要 301 加斜杠（Next 默认去尾斜杠会来回跳）。
+# =============================================================================
+#
+# server {
+#     listen 80;
+#     server_name example.com;
+#     client_max_body_size 20m;
+#
+#     location = /eatmap {
+#         proxy_pass http://127.0.0.1:4000;
+#         proxy_http_version 1.1;
+#         proxy_set_header Upgrade $http_upgrade;
+#         proxy_set_header Connection "upgrade";
+#         proxy_set_header Host $host;
+#         proxy_set_header X-Real-IP $remote_addr;
+#         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#         proxy_set_header X-Forwarded-Proto $scheme;
+#         proxy_set_header X-Forwarded-Host $host;
+#         proxy_cache_bypass $http_upgrade;
+#     }
+#
+#     location ^~ /eatmap/ {
+#         proxy_pass http://127.0.0.1:4000;
+#         proxy_http_version 1.1;
+#         proxy_set_header Upgrade $http_upgrade;
+#         proxy_set_header Connection "upgrade";
+#         proxy_set_header Host $host;
+#         proxy_set_header X-Real-IP $remote_addr;
+#         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#         proxy_set_header X-Forwarded-Proto $scheme;
+#         proxy_set_header X-Forwarded-Host $host;
+#         proxy_cache_bypass $http_upgrade;
+#     }
+# }

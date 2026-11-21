@@ -1,0 +1,48 @@
+{
+  "name": "eatmap",
+  "version": "1.0.0",
+  "private": true,
+  "description": "食图 eatMap — 校园美食瀑布流与室内地图导引平台",
+  "scripts": {
+    "dev": "next dev -p 4000",
+    "dev:lan": "next dev -H 0.0.0.0 -p 4000",
+    "build": "next build",
+    "start": "next start -p 4000",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "verify:static": "node scripts/verify-production-static.mjs",
+    "gen:apple-icons": "node scripts/generate-apple-touch-icons.mjs",
+    "admin:create": "node scripts/create-super-admin.mjs",
+    "pm2:start": "pm2 start ecosystem.config.cjs",
+    "pm2:reload": "pm2 reload eatmap",
+    "pm2:stop": "pm2 stop eatmap",
+    "pm2:logs": "pm2 logs eatmap"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "dependencies": {
+    "jose": "6.2.3",
+    "konva": "10.3.0",
+    "lucide-react": "1.14.0",
+    "next": "16.2.4",
+    "node-cron": "4.2.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-konva": "19.2.4",
+    "server-only": "0.0.1",
+    "sharp": "0.34.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.2.4",
+    "@types/node": "20.19.40",
+    "@types/node-cron": "3.0.11",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "eslint": "9.39.4",
+    "eslint-config-next": "16.2.4",
+    "pm2": "6.0.14",
+    "tailwindcss": "4.2.4",
+    "typescript": "5.9.3"
+  }
+}

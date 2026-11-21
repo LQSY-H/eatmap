@@ -1,0 +1,30 @@
+# =============================================================================
+# systemd 服务示例（不想用 PM2 时可选）
+#
+#   sudo cp deploy/eatmap.service.example /etc/systemd/system/eatmap.service
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now eatmap
+#   sudo journalctl -u eatmap -f
+#
+# 请按实际用户与路径修改 User / WorkingDirectory / EnvironmentFile。
+# =============================================================================
+
+[Unit]
+Description=eatMap (Next.js)
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/srv/eatmap
+EnvironmentFile=/srv/eatmap/.env.production
+Environment=NODE_ENV=production
+Environment=PORT=4000
+ExecStart=/usr/bin/node node_modules/next/dist/bin/next start -p 4000
+Restart=on-failure
+RestartSec=3
+# 上传与备份目录需要写权限
+ReadWritePaths=/srv/eatmap/data /srv/eatmap/data-backup
+
+[Install]
+WantedBy=multi-user.target

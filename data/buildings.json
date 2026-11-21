@@ -1,0 +1,17 @@
+[
+  {
+    "id": "b-canteen-1",
+    "name": "第一食堂",
+    "sortOrder": 10
+  },
+  {
+    "id": "b-canteen-2",
+    "name": "第二食堂",
+    "sortOrder": 20
+  },
+  {
+    "id": "b-food-court",
+    "name": "美食广场",
+    "sortOrder": 30
+  }
+]
